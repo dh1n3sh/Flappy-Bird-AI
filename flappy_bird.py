@@ -34,7 +34,7 @@ GROUND_IMG = load_image('base.png')
 
 STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
-# GEN = 1
+GEN = 1
 
 
 def draw_window(win, birds, pipes, ground, score, gen=1):
@@ -45,9 +45,12 @@ def draw_window(win, birds, pipes, ground, score, gen=1):
         bird.draw(win)
 
     text = STAT_FONT.render("Score: " + str(score), 1, (255, 255, 255))
-    win.blit(text, (WINDOW_W - 10 - text.get_width(), 10))
+    # win.blit(text, (WINDOW_W - 10 - text.get_width(), 10))
+    win.blit(text, (15, 10))
+    text = STAT_FONT.render("Generation: " + str(gen), 1, (255, 255, 255))
+    win.blit(text, (15, 45))
     text = STAT_FONT.render("Alive: " + str(len(birds)), 1, (255, 255, 255))
-    win.blit(text, (10, 10))
+    win.blit(text, (15, 80))
     for pipe in pipes:
         pipe.draw(win)
     ground.draw(win)
@@ -73,6 +76,7 @@ def main(genomes, config):
     # print(PIPE_IMG.get_height())
     score = 0
     win = pygame.display.set_mode((WINDOW_W, WINDOW_H))
+    pygame.display.set_caption('FLAPPY BIRD')
     run = True
     # i = 0
     clock = pygame.time.Clock()
