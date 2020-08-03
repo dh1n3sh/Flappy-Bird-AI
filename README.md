@@ -1,6 +1,6 @@
 
 # Flappy-Bird-AI
-This a clone of the famous Flappy Bird game and an AI to play the game. Made using [NEAT](https://neat-python.readthedocs.io/en/latest/config_file.html).  
+This a clone of the famous Flappy Bird game and an AI to play the game. Made using Pygame and [NEAT](https://neat-python.readthedocs.io/en/latest/config_file.html).  
 
 ![The demo giph should be here](./flappy.gif)
 
