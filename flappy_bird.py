@@ -59,6 +59,7 @@ def draw_window(win, birds, pipes, ground, score, gen=1):
 
 
 def main(genomes, config):
+    global GEN
     birds = []
     nets = []
     ge = []
@@ -143,9 +144,9 @@ def main(genomes, config):
             for g in ge:
                 g.fitness += 5
             pipes.append(Pipe(600, PIPE_IMG))
-        draw_window(win, birds, pipes, ground, score)
+        draw_window(win, birds, pipes, ground, score, gen=GEN)
         # draw_window(win, pipe)
-
+    GEN += 1
     # pygame.quit()
     # print('GAME OVER')
 
