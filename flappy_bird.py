@@ -30,6 +30,7 @@ BG_IMG = load_image('bg.png')
 BASE_IMG = load_image('base.png')
 
 STAT_FONT = pygame.font.SysFont('comicsans', 50)
+STAT_FONT_SMALL = pygame.font.SysFont('comicsans', 35)
 
 
 class Bird:
@@ -69,7 +70,7 @@ class Bird:
         else:
             if self.tilt > -90:
                 self.tilt -= self.ROT_VEL
-        print(self.x, self.y, d, self.tick_count)
+        # print(self.x, self.y, d, self.tick_count)
 
     def draw(self, win):
         self.image_count += 1
@@ -93,7 +94,7 @@ class Bird:
 
         tilted_image = pygame.transform.rotate(self.img, self.tilt)
         new_rect = tilted_image.get_rect(
-            center=self.img.get_rect(topleft=(self.x, self.y)).center)
+            center=self.img.get_rect(topleft=(int(self.x), int(self.y))).center)
         win.blit(tilted_image, new_rect.topleft)
 
     def get_mask(self):
@@ -169,14 +170,16 @@ class Ground:
         win.blit(self.IMG, (self.x2, self.y))
 
 
-def draw_window(win, bird, pipes, ground, score):
+def draw_window(win, bird, pipes, ground, score, msg=""):
     win.blit(BG_IMG, (0, 0))
     bird.draw(win)
-
-    text = STAT_FONT.render("Score: " + str(score), 1, (255, 255, 255))
-    win.blit(text, (WINDOW_W - 10 - text.get_width(), 10))
     for pipe in pipes:
         pipe.draw(win)
+    text = STAT_FONT.render("Score: " + str(score), 1, (255, 255, 255))
+    win.blit(text, (WINDOW_W - 10 - text.get_width(), 10))
+    text = STAT_FONT_SMALL.render(msg, 1, (255, 255, 255))
+    win.blit(text, (WINDOW_W - 10 - text.get_width(), 50))
+
     ground.draw(win)
     # win.blit(PIPE_IMG,(200,700))
     pygame.display.update()
@@ -189,23 +192,46 @@ def main():
     # print(PIPE_IMG.get_height())
     score = 0
     win = pygame.display.set_mode((WINDOW_W, WINDOW_H))
+
     run = True
     i = 0
     clock = pygame.time.Clock()
+    draw_window(win, bird, pipes, ground, score)
+    text = STAT_FONT.render("Press Space Bar To Start", 1, (255, 255, 255))
+    win.blit(text, (50, bird.y-80))
+    pygame.display.update()
+    start = False
+    while not start:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    bird.jump()
+                    start = True
+
     while run:
         clock.tick(25)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     bird.jump()
+                if event.key == pygame.K_ESCAPE:
+                    pause = True
+                    draw_window(win, bird, pipes, ground, score,
+                                msg="Press JUMP to resume")
+                    while pause:
+                        for event in pygame.event.get():
+                            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                                bird.jump()
+                                pause = False
         bird.move()
         rem = []
         add_pipe = False
         for pipe in pipes:
             if pipe.collide(bird):
-                print('colliding'+str(i))
+                # print('colliding'+str(i))
                 i += 1
                 run = False
 
@@ -222,16 +248,19 @@ def main():
             pipes.remove(r)
 
         if bird.y + bird.img.get_height() >= 730:
-            print('hit the g')
+            # print('hit the g')
             run = False
         if add_pipe:
             score += 1
             pipes.append(Pipe(600))
-        draw_window(win, bird, pipes, ground, score)
+        draw_window(win, bird, pipes, ground, score, msg="Press ESC to pause")
         # draw_window(win, pipe)
 
     # pygame.quit()
+    print('-'*20)
     print('GAME OVER')
+    print('YOUR SCORE : '+str(score))
+    print('-'*20)
 
 
 main()
