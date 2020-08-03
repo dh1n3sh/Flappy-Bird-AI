@@ -1,0 +1,7 @@
+Package       Version
+------------- -------
+neat-python   0.92   
+pip           20.0.2 
+pkg-resources 0.0.0  
+pygame        1.9.6  
+setuptools    44.0.0 
